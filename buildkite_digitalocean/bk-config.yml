@@ -3,15 +3,20 @@ runcmd:
   - sh -c 'echo deb https://apt.buildkite.com/buildkite-agent stable main > /etc/apt/sources.list.d/buildkite-agent.list'
   - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 32A37959C2FA5C3C99EFBC32A79206696452D198
   - apt-get update
-  - apt-get install apt-transport-https ca-certificates curl software-properties-common
+  - apt-get install -y apt-transport-https ca-certificates curl software-properties-common
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  - curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+  - chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
   - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null
   - apt-get update
-  - apt-get install -y buildkite-agent docker-ce
+  - apt-get install -y buildkite-agent docker-ce gh
   - snap install doctl
   - snap connect doctl:dot-docker
   - mkdir ~/.config
   - doctl auth init --access-token DOCTL_API_TOKEN
+  - echo "GITHUB_TOKEN" > gh_token.txt
+  - gh auth login --with-token < gh_token.txt
   - sed -i "s/xxx/BUILDKITEKEY/g" /etc/buildkite-agent/buildkite-agent.cfg
   - systemctl enable buildkite-agent
   - systemctl start buildkite-agent

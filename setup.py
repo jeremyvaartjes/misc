@@ -24,6 +24,11 @@ questions = [
         'type': 'input',
         'name': 'DOCTL_API_TOKEN',
         'message': 'What is your digital ocean API token?'
+    },
+    {
+        'type': 'input',
+        'name': 'GITHUB_TOKEN',
+        'message': 'What is your GitHub Personal Access Token?'
     }
 ]
 
@@ -46,6 +51,7 @@ with open("./buildkite_digitalocean/bk-config.yml") as src:
     content = src.read()
     updatedContent = content.replace("BUILDKITEKEY", answers['BUILDKITEKEY'])
     updatedContent = updatedContent.replace("DOCTL_API_TOKEN", answers['DOCTL_API_TOKEN'])
+    updatedContent = updatedContent.replace("GITHUB_TOKEN", answers['GITHUB_TOKEN'])
     with open(homedir + "/.my-scripts/bk-config.yml", "w") as dest:
         dest.write(updatedContent)
         
