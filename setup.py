@@ -19,6 +19,11 @@ questions = [
         'type': 'input',
         'name': 'SSH_FINGERPRINT',
         'message': 'What is your digital ocean ssh key fingerprint?'
+    },
+    {
+        'type': 'input',
+        'name': 'DOCTL_API_TOKEN',
+        'message': 'What is your digital ocean API token?'
     }
 ]
 
@@ -40,6 +45,7 @@ with open("./buildkite_digitalocean/dobk-start.sh") as src:
 with open("./buildkite_digitalocean/bk-config.yml") as src:
     content = src.read()
     updatedContent = content.replace("BUILDKITEKEY", answers['BUILDKITEKEY'])
+    updatedContent = updatedContent.replace("DOCTL_API_TOKEN", answers['DOCTL_API_TOKEN'])
     with open(homedir + "/.my-scripts/bk-config.yml", "w") as dest:
         dest.write(updatedContent)
         
